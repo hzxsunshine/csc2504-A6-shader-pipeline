@@ -7,7 +7,7 @@ void tangent(in vec3 N, out vec3 T, out vec3 B)
 {
   /////////////////////////////////////////////////////////////////////////////
   // Replace with your code 
-  T = vec3(1,0,0);
-  B = vec3(0,1,0);
+  T = vec3(normalize(cross(vec3(1, 0, 0), N)));
+  B = vec3(normalize(cross(N, T)));
   /////////////////////////////////////////////////////////////////////////////
 }

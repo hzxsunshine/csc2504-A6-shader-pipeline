@@ -23,8 +23,23 @@ out vec4 pos_cs_in;
 // expects: PI, model
 void main()
 {
-  /////////////////////////////////////////////////////////////////////////////
-  // Replace with your code 
-  pos_cs_in = vec4(pos_vs_in,1.0);
-  /////////////////////////////////////////////////////////////////////////////
+  vec4 init_vs_in = vec4(pos_vs_in, 1.0);
+  mat4 moon_model;
+
+  float theta = M_PI * animation_seconds / 2;
+  vec4 shift = vec4(sin(theta)*2, 0, cos(theta)*2, 0);
+  vec4 temp;
+
+  if (is_moon){
+    moon_model = model(is_moon, animation_seconds) * uniform_scale(0.3);
+    temp = moon_model * init_vs_in + shift;
+    //vec3 v = vec3(0, 0, 2.0);
+    //moon_model = model(is_moon, animation_seconds) * transpose(translate(v)) * uniform_scale(0.3);
+  }
+  else {
+    moon_model = model(is_moon, animation_seconds);
+    temp = moon_model * init_vs_in;
+  }
+
+  pos_cs_in = proj * view * temp;
 }

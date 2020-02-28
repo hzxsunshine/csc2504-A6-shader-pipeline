@@ -22,7 +22,20 @@ vec3 blinn_phong(
 {
   /////////////////////////////////////////////////////////////////////////////
   // Replace with your code 
-  return vec3(1,1,1);
+  vec3 light = vec3(1, 1, 1);
+  vec3 color = vec3(0, 0 ,0);
+
+  vec3 h = normalize(v + l);
+  float nh = dot(n, h);
+  float nl = dot(n, l);
+
+  vec3 ambient = ka * (0.1, 0.1, 0,1);
+  vec3 diffuse = kd * light * max(0, nl);
+  vec3 specular = ks * light * pow(max(0, nh), p);
+
+  color = color + ambient + diffuse + specular;
+
+  return color;
   /////////////////////////////////////////////////////////////////////////////
 }
 

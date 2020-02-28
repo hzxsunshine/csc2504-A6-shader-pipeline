@@ -27,9 +27,36 @@ void main()
 {
   /////////////////////////////////////////////////////////////////////////////
   // Replace with your code 
-  pos_fs_in = interpolate(gl_TessCoord, pos_es_in[0], pos_es_in[1], pos_es_in[2]);
-  gl_Position = pos_fs_in;
+  vec4 interpolate_vec = interpolate(gl_TessCoord, pos_es_in[0], pos_es_in[1], pos_es_in[2]);
+  vec4 pos_fs_in_interp = vec4(normalize(interpolate_vec.xyz), 1);
+
   /////////////////////////////////////////////////////////////////////////////
+
+
+  mat4 moon_model = model(is_moon, animation_seconds);
+  float theta = M_PI * animation_seconds / 2;
+  vec4 shift = vec4(sin(theta)*2, 0, cos(theta)*2, 0);
+  vec4 temp;
+
+  normal_fs_in = (transpose(inverse(view)) * transpose(inverse(moon_model)) * pos_fs_in_interp).xyz;
+  sphere_fs_in = pos_fs_in_interp.xyz;
+
+
+  if (is_moon){
+    moon_model = moon_model * uniform_scale(0.3);
+
+    pos_fs_in = moon_model * pos_fs_in_interp + shift;
+    view_pos_fs_in = moon_model * pos_fs_in_interp + shift;
+  }
+  else {
+    pos_fs_in = moon_model * pos_fs_in_interp;
+    view_pos_fs_in = moon_model * pos_fs_in_interp;
+  }
+
+  pos_fs_in = proj * view * pos_fs_in;
+  view_pos_fs_in = view * view_pos_fs_in;
+
+  gl_Position = pos_fs_in;
 }
 
 
